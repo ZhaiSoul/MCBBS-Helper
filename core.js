@@ -91,6 +91,44 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 
+function CheckUpdate(){
+	console.log("开始检查更新");
+	/* 这里应该有一些检查更新的步骤的（读取插件的版本信息，而非读取保存的version） */
+
+	/* 进行本地版本号检查以及是否是第一次使用检查 */
+
+	var a = getOption("version");
+	var b = String(chrome.app.getDetails().version);
+	if(a==="0.0.0"){
+		console.log("无版本号信息，正在进入向导模式");
+		setOption("version",chrome.app.getDetails().version);
+		chrome.tabs.create({url: chrome.extension.getURL("welcome.html?mod=fristrun")});
+	}else{
+		var c = compareVersion(a,b);
+		if(c>0){
+			console.log("更新完成，正在打开更新信息");
+			chrome.tabs.create({url: chrome.extension.getURL("welcome.html?mod=new")});
+			setOption("version",chrome.app.getDetails().version);
+		}else if(c<0){
+			console.log("新安装的为老旧版本");
+			setOption("version",chrome.app.getDetails().version);
+		}else{
+			console.log("系统记录的版本与当前插件版本相同");	
+		}
+	}
+	
+}
+
+function compareVersion(a, b) {
+    if (a === b) return 0;
+    for (var c = a.split("."), d = b.split("."), e = Math.min(c.length, d.length), f = 0; f < e; f++) {
+        if (parseInt(c[f]) > parseInt(d[f])) return 1;
+        if (parseInt(c[f]) < parseInt(d[f])) return - 1
+    }
+
+    return c.length > d.length ? 1 : c.length < d.length ? -1 : 0
+}
+
 function OnClickCYQ(){
 	alert("啪，你死了，别说了。");
 }
