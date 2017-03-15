@@ -1,7 +1,11 @@
 var bkg_page = chrome.extension.getBackgroundPage();
 var bbsurl = "http://www.mcbbs.net"
-var headurl = bbsurl+"/uc_server/avatar.php?uid=";
-var uid = "";
+
+//API地址
+var headurl = bbsurl+"/uc_server/avatar.php?uid=";//头像API
+var userprofile = bbsurl+"/api/mobile/index.php?module=profile";//用户信息API
+//每次调用API都将缓存消息、提醒、用户名等信息（反正有啥用得到的信息就缓存）
+
 chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
     if (notifId === myNotificationID) {
         if (btnIdx === 0) {
@@ -22,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		document.getElementById('rank').addEventListener('mouseleave', OnMouseLeaveExp);
 		GetUserInfo(function (array){
 			console.log(array);
-			uid = array[0];
+			var uid = array[0];
 			if(array!=null){
 				if(uid!=0){
 					if(array[3]<=0||array[3]==null||array[3]==undefined){
@@ -118,6 +122,38 @@ function CheckUpdate(){
 	}
 	
 }
+
+function ConnectServer(url,callback){
+	var a = $.ajax({url:url,async:false,contentType:"MCBBSHelper Plugin/1.0(zhaisoul.650@gmail.com)"});
+	console.log(a);
+	if(a.status==200){
+		callback(a.responseText);
+	}else{
+		console.log("无法连接到服务器，状态码："+a.status);
+		callback(null);
+	}
+	/*
+	try{
+	var xmlHttpAnother = new XMLHttpRequest();
+	xmlHttpAnother.open('GET', url);
+	xmlHttpAnother.onload = function (e) {
+		if (xmlHttpAnother.readyState === 4) {
+			if (xmlHttpAnother.status === 200) {
+				callback(xmlHttpAnother.responseText);
+			}
+		}else{
+			console.log("无法连接到服务器，状态码："+xmlHttpAnother.status);
+			callback(null);
+		}
+	}
+	xmlHttpAnother.send(null);
+	}catch(e){
+		console.log("无法连接到服务器："+e);
+		callback(null);
+	}
+	*/
+}
+
 
 function compareVersion(a, b) {
     if (a === b) return 0;
@@ -285,19 +321,40 @@ function getDynamic(callback) {
 function GetMessage(){	
 	console.log("开始获取新提醒 "+Date());
 	GetUserInfo(function(array){
-		if(array[3]<=0||array[3]==null||array[3]==undefined){
-		}else{
-			console.log(array);
-			chrome.notifications.create({type: "basic", iconUrl: "icon.png", title: "MCBBS扩展插件",buttons: [{
-					title: "点击查看"
-			}], message: "你有"+array[3]+"条新提醒，请点击查看！"},function(id) {
-        myNotificationID = id;
-			});
+		if(array!=null){
+			if(array[3]<=0||array[3]==null||array[3]==undefined){
+			}else{
+				console.log(array);
+				chrome.notifications.create({type: "basic", iconUrl: "icon.png", title: "MCBBS扩展插件",buttons: [{
+						title: "点击查看"
+				}], message: "你有"+array[3]+"条新提醒，请点击查看！"},function(id) {
+			myNotificationID = id;
+				});
+			}
 		}
 	});
 }
 
 function GetUserInfo(callback){
+	ConnectServer(userprofile,function(backmessage){
+		if(backmessage!=null){
+			obj = JSON.parse(backmessage);
+			var arr = new Array(7);
+			arr[0] = obj.Variables.member_uid;
+			if(obj.Variables.member_uid!=0){
+				arr[1] = obj.Variables.member_username;
+				arr[2] = obj.Variables.space.group.grouptitle;
+				arr[3] = obj.Variables.space.newprompt;
+				arr[4] = obj.Variables.space.newpm;
+				arr[5] = obj.Variables.space.credits;
+				obj.Variables.space.group.creditslower!=undefined ? arr[6] = obj.Variables.space.group.creditslower : arr[6] = arr[5];
+			}
+			callback(arr);
+			}else{
+				callback(null);
+			}
+	});
+	/*
 	var xmlHttpAnother = new XMLHttpRequest();
 	var userHome = bbsurl+"/api/mobile/index.php?module=profile";
 	xmlHttpAnother.open('GET', userHome);
@@ -324,6 +381,7 @@ function GetUserInfo(callback){
 		}
 	}
 	xmlHttpAnother.send(null);
+	*/
 }
 
 var myNotificationID = null;
