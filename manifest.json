@@ -14,6 +14,7 @@
   "icons": {
       "128": "icon.png"
    },
+   "options_page": "settings.html",
   "permissions": [
 		"alarms",
 		"tabs",
