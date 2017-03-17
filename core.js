@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		$('#bbs-new-notice').click(OnClickOpenMessage);
 		$('#bbs-cyq-attack').click(OnClickCYQ);
 		$('#bbs-rank').hover(OnMouseEnterExp, OnMouseLeaveExp);
-		GetUserInfo(function (array){
+		getUserInfo(function (array){
 			console.log(array);
 			var uid = array[0];
 			if(array!=null){
@@ -122,35 +122,17 @@ function CheckUpdate(){
 	
 }
 
-function ConnectServer(url,callback){
-	var a = $.ajax({url:url,async:false,contentType:"MCBBSHelper Plugin/1.0(zhaisoul.650@gmail.com)"});
-	console.log(a);
-	if(a.status==200){
-		callback(a.responseText);
-	}else{
-		console.log("无法连接到服务器，状态码："+a.status);
-		callback(null);
-	}
-	/*
-	try{
-	var xmlHttpAnother = new XMLHttpRequest();
-	xmlHttpAnother.open('GET', url);
-	xmlHttpAnother.onload = function (e) {
-		if (xmlHttpAnother.readyState === 4) {
-			if (xmlHttpAnother.status === 200) {
-				callback(xmlHttpAnother.responseText);
-			}
-		}else{
-			console.log("无法连接到服务器，状态码："+xmlHttpAnother.status);
-			callback(null);
-		}
-	}
-	xmlHttpAnother.send(null);
-	}catch(e){
-		console.log("无法连接到服务器："+e);
-		callback(null);
-	}
-	*/
+function connectToServer(url, callback) {
+    callback = callback || function () {};
+	$.ajax({
+        url: url,
+        contentType: "MCBBSHelper Plugin/1.0(zhaisoul.650@gmail.com)"
+    }).done(function (data) {
+        console.log(data);
+        callback(data);
+    }).fail(function () {
+        callback(null);
+    });
 }
 
 
@@ -319,7 +301,7 @@ function getDynamic(callback) {
 
 function GetMessage(){	
 	console.log("开始获取新提醒 "+Date());
-	GetUserInfo(function(array){
+	getUserInfo(function(array){
 		if(array!=null){
 			if(array[3]<=0||array[3]==null||array[3]==undefined){
 			}else{
@@ -334,24 +316,23 @@ function GetMessage(){
 	});
 }
 
-function GetUserInfo(callback){
-	ConnectServer(userprofile,function(backmessage){
-		if(backmessage!=null){
-			obj = JSON.parse(backmessage);
-			var arr = new Array(7);
-			arr[0] = obj.Variables.member_uid;
-			if(obj.Variables.member_uid!=0){
-				arr[1] = obj.Variables.member_username;
-				arr[2] = obj.Variables.space.group.grouptitle;
-				arr[3] = obj.Variables.space.newprompt;
-				arr[4] = obj.Variables.space.newpm;
-				arr[5] = obj.Variables.space.credits;
-				obj.Variables.space.group.creditslower!=undefined ? arr[6] = obj.Variables.space.group.creditslower : arr[6] = arr[5];
-			}
-			callback(arr);
-			}else{
-				callback(null);
-			}
+function getUserInfo(callback){
+	connectToServer(userprofile, function (obj) {
+        if (obj) {
+            var arr = new Array(7);
+            arr[0] = obj.Variables.member_uid;
+            if (obj.Variables.member_uid != 0) {
+                arr[1] = obj.Variables.member_username;
+                arr[2] = obj.Variables.space.group.grouptitle;
+                arr[3] = obj.Variables.space.newprompt;
+                arr[4] = obj.Variables.space.newpm;
+                arr[5] = obj.Variables.space.credits;
+                obj.Variables.space.group.creditslower != undefined ? arr[6] = obj.Variables.space.group.creditslower : arr[6] = arr[5];
+            }
+            callback(arr);
+        } else {
+            callback(null);
+        }
 	});
 	/*
 	var xmlHttpAnother = new XMLHttpRequest();
@@ -405,7 +386,7 @@ function getNugget() {
 							title: "每日金粒领取 - "+new Date().toLocaleDateString(),
 							message: result
 							}
-							GetUserInfo(function(array) {
+							getUserInfo(function(array) {
 								if(array!=null){
 									var xhr = new XMLHttpRequest();
 									xhr.open("GET", headurl+array[0]+"&size=big");
