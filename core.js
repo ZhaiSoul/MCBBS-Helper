@@ -17,13 +17,12 @@ chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
     }
 }),
 document.addEventListener('DOMContentLoaded', function () {
-		document.getElementById('OpenBBS').addEventListener('click', OnClickOpenBBS);
-		document.getElementById('Sign').addEventListener('click', OnClickSign);
-		document.getElementById('UserSettings').addEventListener('click', OnClickSettings);
-		document.getElementById('NewNotice').addEventListener('click', OnClickOpenMessage);	
-		document.getElementById('CYQ').addEventListener('click', OnClickCYQ);	
-		document.getElementById('rank').addEventListener('mouseenter', OnMouseEnterExp);
-		document.getElementById('rank').addEventListener('mouseleave', OnMouseLeaveExp);
+		$('#bbs-open').click(OnClickOpenBBS);
+		$('#bbs-sign').click(OnClickSign);
+		$('#bbs-user-settings').click(OnClickSettings);
+		$('#bbs-new-notice').click(OnClickOpenMessage);
+		$('#bbs-cyq-attack').click(OnClickCYQ);
+		$('#bbs-rank').hover(OnMouseEnterExp, OnMouseLeaveExp);
 		GetUserInfo(function (array){
 			console.log(array);
 			var uid = array[0];
@@ -31,20 +30,20 @@ document.addEventListener('DOMContentLoaded', function () {
 				if(uid!=0){
 					if(array[3]<=0||array[3]==null||array[3]==undefined){
 					}else{
-						$("#NewNotice").text("提醒("+array[3]+")")
-						$("#NewPM").text("消息("+array[4]+")")
+						$("#bbs-new-notice").text("提醒("+array[3]+")")
+						$("#bbs-new-pm").text("消息("+array[4]+")")
 					}
-					$("#username").html(array[1]);
-					$("#rank").html(array[2]);
-					$("#Avatar").attr("src",headurl+array[0]);
+					$("#bbs-username").html(array[1]);
+					$("#bbs-rank").html(array[2]);
+					$("#bbs-avatar").attr("src",headurl+array[0]);
 
 					/* 显示隐藏的等级与消息框 */
 					$("#divmessage").show(400);
-					$("#rank").show();
+					$("#bbs-rank").show();
 					
 					/* 设置允许点击签到和用户设置按钮 */
-					$("#Sign").removeAttr("disabled");
-					$("#UserSettings").removeAttr("disabled");		
+					$("#bbs-sign").removeAttr("disabled");
+					$("#bbs-user-settings").removeAttr("disabled");
 
 					var uprank = array[5]/array[6];
 					console.log(uprank);
@@ -52,16 +51,16 @@ document.addEventListener('DOMContentLoaded', function () {
 					$("#rankexp").html(array[5]+"/"+array[6]);
 					
 				}else{
-					$("#username").html("请登录账号");
-					$("#UserSettings").hide();
-					$("#Sign").hide();
-					document.getElementById('Login').addEventListener('click', OnClickLogin);	
-					$("#Login").show(200);
+					$("#bbs-username").html("请登录账号");
+					$("#bbs-user-settings").hide();
+					$("#bbs-sign").hide();
+					$('#bbs-login').click(OnClickLogin);
+					$("#bbs-login").show(200);
 				}
 			}else{
-					$("#username").html("无法连接到服务器");
-					$("#UserSettings").hide();
-					$("#Sign").hide();
+					$("#bbs-username").html("无法连接到服务器");
+					$("#bbs-user-settings").hide();
+					$("#bbs-sign").hide();
 			}
 		});
 		/*
@@ -80,16 +79,16 @@ document.addEventListener('DOMContentLoaded', function () {
 		$(document).ready(function (){
 		chrome.tabs.getSelected(null, function (a) {
 		if(a.url.match(/:\/\/(.[^\/]+)/)[1] == "www.mcbbs.net"){
-			 $("#OpenBBS").hide() 
+			 $("#bbs-open").hide()
 			 var num = parseInt(10*Math.random());
 			 if(num>4){
-				 $("#CYQ").html("一键CYQ Attack");
+				 $("#bbs-cyq-attack").html("一键CYQ Attack");
 			 }else{
-				$("#CYQ").html("一键DDOC");
+				$("#bbs-cyq-attack").html("一键DDOC");
 			 }
 		}else{
-			$("#CYQ").hide()
-			$("#UserSettings").hide() 
+			$("#bbs-cyq-attack").hide()
+			$("#bbs-user-settings").hide()
 		}
 		})
 	});
