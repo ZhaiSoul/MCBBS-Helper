@@ -51,6 +51,63 @@
                     </section>
                 </div>
 		</div>
+		<div id="adminPage" class="container">
+			<div class="6u 12u$(medium)">
+				<h3>版主版块监控</h3>
+				<div class="6u 12u$(medium)">
+					<input type="checkbox" id="cb_watchDog_theme" name="cb_watchDog_theme">
+					<label for="cb_watchDog_theme">开启版块新主题监控</label>
+				</div>
+				<div class="6u 12u$(medium)">
+					<input type="checkbox" id="cb_watchDog_reply" name="cb_watchDog_reply">
+					<label for="cb_watchDog_reply">开启版块新回复监控</label>
+				</div>
+				<ul class="actions">
+					<li>自动刷新时间：</li>
+					<li><input type="text" name="name" id="name" value="" style="width: 70px;height: 30px" /></li>
+					<li>分钟</li>
+				</ul>
+
+				<textarea name="message" id="message" placeholder="输入监控词（回车换行），触发监控词的帖子将会自动添加到可疑帖子列表中，支持正则" rows="6"></textarea>
+				</br>
+				<!-- 通过http://www.mcbbs.net/api/mobile/index.php?module=forumnav 获取版块列表 -->
+				<select name="category" id="category">
+					<option value="">-请选择你所管理的版块-</option>
+				</select>
+				</br>
+				<!-- 仅会保存最近100个帖子或回复，避免内存爆炸。可以通过开关来筛选显示全部最新帖子还是进入监控的可疑帖子 -->
+				<table>
+					<thead>
+						<tr>
+							<th>帖子tid</th>
+							<th>标题</th>
+							<th>时间</th>
+							<th>链接</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1024</td>
+							<td>啊！这是一个帖子标题哦！</td>
+							<td>2015年5月</td>
+							<td><a href="">链接</a></td>
+						</tr>
+						<tr>
+							<td>1024132</td>
+							<td>啊！这是另一个帖子标题哦！</td>
+							<td>2015年5月</td>
+							<td><a href="">链接</a></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2"></td>
+							<td>总共有1个可疑帖子</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
             <script src="resource.js"></script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.scrolly.min.js"></script>
@@ -59,6 +116,11 @@
 			<script src="assets/js/skel.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>        
+			<script src="assets/js/main.js"></script>      
+			
+			<script src="settings.js"></script>  
+			<script src="user.js"></script>
+			<script src="core.js"></script>
+			<script src="resource.js"></script>			
     </body>
 </html>

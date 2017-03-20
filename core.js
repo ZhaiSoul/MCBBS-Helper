@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#bbs-cyq-attack').click(OnClickCYQ);
     $('#bbs-rank').hover(OnMouseEnterExp, OnMouseLeaveExp);
     $('#bbs-login').click(OnClickLogin);
+	$('#bbs-new-pm').click(OnClickOpenPM);
 		// getUserInfo(function (array){
 		// 	console.log(array);
 		// 	var uid = array[0];
@@ -152,7 +153,7 @@ function OnMouseEnterExp(){
 }
 
 function OnMouseLeaveExp(){
-		$("#rankexpprodiv").animate({  
+	$("#rankexpprodiv").animate({  
 		marginTop:'-5px',  
 		opacity:'0'
 	});  
@@ -180,6 +181,13 @@ function OnClickOpenMessage(e){
 	var url = bbsurl;
 	chrome.tabs.create({
             url:bbsurl+"/home.php?mod=space&do=notice"
+        });
+}
+
+function OnClickOpenPM(e){
+	var url = bbsurl;
+	chrome.tabs.create({
+            url:bbsurl+"/home.php?mod=space&do=pm"
         });
 }
 
