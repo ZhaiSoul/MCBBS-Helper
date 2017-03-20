@@ -17,80 +17,74 @@ chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
     }
 }),
 document.addEventListener('DOMContentLoaded', function () {
-		$('#bbs-open').click(OnClickOpenBBS);
-		$('#bbs-sign').click(OnClickSign);
-		$('#bbs-user-settings').click(OnClickSettings);
-		$('#bbs-new-notice').click(OnClickOpenMessage);
-		$('#bbs-cyq-attack').click(OnClickCYQ);
-		$('#bbs-rank').hover(OnMouseEnterExp, OnMouseLeaveExp);
-		getUserInfo(function (array){
-			console.log(array);
-			var uid = array[0];
-			if(array!=null){
-				if(uid!=0){
-					if(array[3]<=0||array[3]==null||array[3]==undefined){
-					}else{
-						$("#bbs-new-notice").text("提醒("+array[3]+")")
-						$("#bbs-new-pm").text("消息("+array[4]+")")
-					}
-					$("#bbs-username").html(array[1]);
-					$("#bbs-rank").html(array[2]);
-					$("#bbs-avatar").attr("src",headurl+array[0]);
+    $('#bbs-open').click(OnClickOpenBBS);
+    $('#bbs-sign').click(OnClickSign);
+    $('#bbs-user-settings').click(OnClickSettings);
+    $('#bbs-new-notice').click(OnClickOpenMessage);
+    $('#bbs-cyq-attack').click(OnClickCYQ);
+    $('#bbs-rank').hover(OnMouseEnterExp, OnMouseLeaveExp);
+    $('#bbs-login').click(OnClickLogin);
+		// getUserInfo(function (array){
+		// 	console.log(array);
+		// 	var uid = array[0];
+		// 	if(array!=null){
+		// 		if(uid!=0){
+		// 			if(array[3]<=0||array[3]==null||array[3]==undefined){
+		// 			}else{
+		// 				$("#bbs-new-notice").text("提醒("+array[3]+")")
+		// 				$("#bbs-new-pm").text("消息("+array[4]+")")
+		// 			}
+		// 			$("#bbs-username").html(array[1]);
+		// 			$("#bbs-rank").html(array[2]);
+		// 			$("#bbs-avatar").attr("src",headurl+array[0]);
+        //
+		// 			/* 显示隐藏的等级与消息框 */
+		// 			$("#divmessage").show(400);
+		// 			$("#bbs-rank").show();
+		//
+		// 			/* 设置允许点击签到和用户设置按钮 */
+		// 			$("#bbs-sign").removeAttr("disabled");
+		// 			$("#bbs-user-settings").removeAttr("disabled");
+        //
+		// 			var uprank = array[5]/array[6];
+		// 			console.log(uprank);
+		// 			$("#rankexppro").attr("style","width:"+uprank*100+"%");
+		// 			$("#rankexp").html(array[5]+"/"+array[6]);
+		//
+		// 		}else{
+		// 			$("#bbs-username").html("请登录账号");
+		// 			$("#bbs-user-settings").hide();
+		// 			$("#bbs-sign").hide();
+		// 			$('#bbs-login').click(OnClickLogin);
+		// 			$("#bbs-login").show(200);
+		// 		}
+		// 	}else{
+		// 			$("#bbs-username").html("无法连接到服务器");
+		// 			$("#bbs-user-settings").hide();
+		// 			$("#bbs-sign").hide();
+		// 	}
+		// });
 
-					/* 显示隐藏的等级与消息框 */
-					$("#divmessage").show(400);
-					$("#bbs-rank").show();
-					
-					/* 设置允许点击签到和用户设置按钮 */
-					$("#bbs-sign").removeAttr("disabled");
-					$("#bbs-user-settings").removeAttr("disabled");
+    var mcbbs = new UserMCBBS();
 
-					var uprank = array[5]/array[6];
-					console.log(uprank);
-					$("#rankexppro").attr("style","width:"+uprank*100+"%");
-					$("#rankexp").html(array[5]+"/"+array[6]);
-					
-				}else{
-					$("#bbs-username").html("请登录账号");
-					$("#bbs-user-settings").hide();
-					$("#bbs-sign").hide();
-					$('#bbs-login').click(OnClickLogin);
-					$("#bbs-login").show(200);
-				}
-			}else{
-					$("#bbs-username").html("无法连接到服务器");
-					$("#bbs-user-settings").hide();
-					$("#bbs-sign").hide();
-			}
-		});
-		/*
-		GetWebInfo(function(array){
-			if(array[3]<0||array[3]==""){
-			}else{
-				console.log(array);
-				$("#NewNotice").html("新提醒("+array[2]+")")
-			}
-			$("#username").html(array[1]+"("+array[2]+")");
-			getDynamic(function(imageUrl) {
-				$("#Avatar").attr("src",imageUrl);
-			});
-		});
-		*/
-		$(document).ready(function (){
-		chrome.tabs.getSelected(null, function (a) {
-		if(a.url.match(/:\/\/(.[^\/]+)/)[1] == "www.mcbbs.net"){
-			 $("#bbs-open").hide()
-			 var num = parseInt(10*Math.random());
-			 if(num>4){
-				 $("#bbs-cyq-attack").html("一键CYQ Attack");
-			 }else{
-				$("#bbs-cyq-attack").html("一键DDOC");
-			 }
-		}else{
-			$("#bbs-cyq-attack").hide()
-			$("#bbs-user-settings").hide()
-		}
-		})
+    $(function () {
+        chrome.tabs.getSelected(null, function (a) {
+            if (a.url.match(/:\/\/(.[^\/]+)/)[1] == "www.mcbbs.net") {
+                $("#bbs-open").hide();
+                var num = parseInt(10 * Math.random());
+                if (num > 4) {
+                    $("#bbs-cyq-attack").html("一键CYQ Attack");
+                } else {
+                    $("#bbs-cyq-attack").html("一键DDOC");
+                }
+                $("#bbs-cyq-attack").show();
+                $("#bbs-user-settings").show();
+            } else {
+                $("#bbs-cyq-attack").hide();
+                $("#bbs-user-settings").hide();
+            }
+        });
+        mcbbs.syncUserInfo(mcbbs.update);
 	});
 });
 
@@ -299,6 +293,7 @@ function getDynamic(callback) {
 }
 */
 
+// TODO: to be rewritten
 function GetMessage(){	
 	console.log("开始获取新提醒 "+Date());
 	getUserInfo(function(array){
@@ -316,6 +311,7 @@ function GetMessage(){
 	});
 }
 
+// TODO: to be removed
 function getUserInfo(callback){
 	connectToServer(userprofile, function (obj) {
         if (obj) {
@@ -366,7 +362,7 @@ function getUserInfo(callback){
 
 var myNotificationID = null;
 
-
+// TODO: to be rewritten
 function getNugget() {
 	console.log("开始自动签到");
 	var xmlHttp = new XMLHttpRequest(), xmlHttpAnother = new XMLHttpRequest();
