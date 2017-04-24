@@ -9,164 +9,104 @@
         margin: 0;
     }
 
-    .u-progress {
+    .info-wrapper {
+        display: none;
+        left: 50%;
+        width: 220px;
+        padding-bottom: 0;
+        border-top: 0;
+        display: block;
+        margin:10px;
+    }
+
+    .info {
+        border-bottom: 1px solid #c8c8c8;
+        height: auto;
+    }
+
+    .info > * {
+        margin: 10px 0;
+    }
+
+    .info .user {
+        line-height: 16px;
+        padding-bottom: 15px;
+        margin: 0 -5px;
+    }
+
+    .info .user b {
+        position: relative;
+        display: inline-block;
+    }
+
+    .info .user .info-left-wrapper {
+        float: left;
+        margin: 5px;
+        font-size: 16px;
+    }
+    
+    .info .user .info-right-wrapper {
+        float: left;
+        margin: 0 5px;
+        font-size: 16px;
+    }
+
+    .info .user .info-right-wrapper .username-wrapper {
+        margin: 5px;
+    }
+
+    .info .user .info-right-wrapper .rank-wrapper {
+        margin: 5px;
+        display: inline-block;
+        line-height: 15px;
+        padding: 1px 3px 1px 3px;
+        color: #ffffff;
+        background-color: #19c232;
+        border: 1px solid #19c232;
+        border-radius: 3px
+    }
+
+    .info .rank {
+        margin: 1px auto 0
+    }
+
+    .info .rank .progress-bar-wrapper {
         opacity: 0;
         margin-top: -5px;
         width: 100%;
-        height: 12px;
+        height: 15px;
         overflow: hidden;
         border-radius: 3px;
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
         background: #f7f7f7;
     }
 
-    .u-progress-c1 .pgbar {
-        height: 12px;
+    .info .rank .progress-bar-wrapper .progress-bar {
+        height: 15px;
         position: relative;
         float: left;
+        color: #ffffff;
         background: #50b050;
-        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#69c769), to(#50b050));
-        background: -webkit-linear-gradient(#69c769, #50b050);
-        background: -moz-linear-gradient(#69c769, #50b050);
-        background: -ms-linear-gradient(#69c769, #50b050);
         background: linear-gradient(#69c769, #50b050);
     }
 
-    .b-icon {
-        display: inline-block;
-        background: url(http://static.hdslb.com/images/base/icons.png)
-    }
-
-    #i_menu_fav {
-        width: 80px;
-        display: none
-    }
-
-    .i-menu-profile {
-        display: none;
-        left: 50%;
-        width: 220px;
-        padding-bottom: 0;
-        border-top: 0
-    }
-
-    .i-menu-profile .i_menu_bg_t {
-        display: none
-    }
-
-    .i-menu-profile .info {
-        height: auto;
-        border: 0;
-    }
-
-    .i-menu-profile .info .layer-row {
-        margin: 1px auto 0
-    }
-
-    .i-menu-profile .info .vip-due-hinter, .i-menu-profile .info .vip-hinter {
-        margin: 0 1px;
-        display: inline-block;
-        line-height: 15px;
-        padding: 0 1px;
-        color: #99a2aa;
-        border: 1px solid #ccd0d7;
-        border-radius: 3px
-    }
-
-    .i-menu-profile .info .vip-hinter[data-vip-type] {
-        padding: 1px 3px 1px 3px;
-        color: #fff;
-        background-color: #19c232;
-        border-color: #19c232
-    }
-
-    .i-menu-profile .info .uname {
-        line-height: 16px;
-        padding-bottom: 15px;
-        text-align: left
-    }
-
-    .i-menu-profile .info .uname b {
-        position: relative;
-        display: inline-block
-    }
-
-    .i-menu-profile .info .uname .user-info-level {
-        margin-right: 0
-    }
-
-    .i-menu-profile .info .coin, .i-menu-profile .info .score {
-        max-width: 70px;
-        text-align: left;
+    .info .rank .progress-bar-wrapper .progress-bar * {
         float: left;
-        line-height: 16px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis
+        margin: 1px 2px;
+        font-size: 12px;
+    }
+    
+    .info .messages {
+        margin: 10px 0;
+        clear: both;
     }
 
-    .i-menu-profile .info .coin {
-        position: relative;
-        max-width: none;
-        overflow: visible
+    .info .messages a {
+        text-decoration: none;
+        font-size: 1.25em;
     }
 
-    .i-menu-profile .info .coin:hover {
-        color: #00a1d6
-    }
-
-    .i-menu-profile .info .coin.hover-first .b-back {
-        -webkit-animation: coin-bounce 1s cubic-bezier(.45, .05, .55, .95) .2s;
-        -moz-animation: coin-bounce 1s cubic-bezier(.45, .05, .55, .95) .2s;
-        animation: coin-bounce 1s cubic-bezier(.45, .05, .55, .95) .2s
-    }
-
-    .i-menu-profile .info .coin.hover-first .pre {
-        top: 18px
-    }
-
-    .i-menu-profile .info .coin.hover-first .cur {
-        top: 0
-    }
-
-    .i-menu-profile .info .coin.hover-first .reward-for-login {
-        filter: alpha(opacity=0) \9;
-        opacity: 0;
-        transition: .4s ease 1.6s
-    }
-
-    :root .i-menu-profile .info .coin.hover-first .reward-for-login {
-        filter: alpha(opacity=100)
-    }
-
-    .i-menu-profile .info .coin.hover-again .pre {
-        top: 18px
-    }
-
-    .i-menu-profile .info .coin.hover-again .cur {
-        top: 0
-    }
-
-    .i-menu-profile .info .coin.hover-again .reward-for-login {
-        filter: alpha(opacity=0) \9;
-        opacity: 0
-    }
-
-    :root .i-menu-profile .info .coin.hover-again .reward-for-login {
-        filter: alpha(opacity=100)
-    }
-
-    .i-menu-profile .info b.currency {
-        position: relative;
-        z-index: 2;
-        height: 18px;
-        min-width: 18px;
-        vertical-align: top;
-        margin-right: 4px;
-    }
-
-
-    #myprompt.new {
+    .info .messages .message-icon-notice {
         background-image: url(images/notice.gif);
         position: relative;
         z-index: 1;
@@ -175,7 +115,7 @@
         display: inline-block;
     }
 
-    #pm_ntc.new {
+    .info .messages .message-icon-pm {
         background-image: url(images/pm.png);
         position: relative;
         z-index: 1;
@@ -184,7 +124,11 @@
         display: inline-block;
     }
 
-    button {
+    .actions {
+        margin: 5px 0;
+    }
+
+    .actions button {
         font-size: 10px;
         color: #666;
         cursor: pointer;
@@ -193,53 +137,24 @@
         border: solid 1px #ddd;
         width: calc(50% - 2px);
         height: 30px;
-        margin: 1px 0;
+        margin: 5px 0;
         background: #fff linear-gradient(to top, #f8f8f8, #fff);
         transition: .2s all;
         outline: 0
     }
 
-    button.little {
-        width: 40px
-    }
-
-    button:hover {
+    .actions button:hover {
         color: #fff;
         border: solid 1px #008bbc;
         background-image: linear-gradient(to top, #009cd6, #00aae0);
         box-shadow: rgba(255, 255, 255, .2) 0 1px 0 0 inset, 0 1px 1px #CCC
     }
 
-    button:active {
+    .actions button:active {
         color: #fff;
         border: solid 1px #0082b0;
         background-image: linear-gradient(to top, #00a6dc, #00bee7);
         box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, .15), 0 1px 2px 0 rgba(0, 0, 0, .05)
-    }
-
-    .red {
-        color: red
-    }
-
-    .info > * {
-        margin: 10px 0;
-    }
-
-    #name-left {
-        float: left;
-    }
-
-    #name-right {
-        float: left;
-        font-size: 16px;
-    }
-
-    #name-right div {
-        margin: 0 10px 10px;
-    }
-
-    #divmessage {
-        clear: both;
     }
 </style>
 <script src="user.js"></script>
@@ -249,45 +164,43 @@
 <title>MCBBS助手</title>
 </head>
 <body>
-<div class="i-menu-profile i-menu" style="display: block;margin:10px">
-    <div class="info" style="border-bottom:1px solid #c8c8c8;">
+<div class="info-wrapper" style="">
+    <div class="info">
         <h2>MCBBS助手</h2>
     </div>
 </div>
 
-<div class="i-menu-profile i-menu" style="display: block;margin:10px">
-    <div class="info" style="border-bottom:1px solid #c8c8c8;">
-        <div class="uname">
-            <div id="name-left">
+<div class="info-wrapper" style="display: block;margin:10px">
+    <div class="info">
+        <div class="user">
+            <div class="info-left-wrapper">
                 <img id="bbs-avatar" src="icon.png" width="48"/>
             </div>
-            <div id="name-right">
-                <div><b id="bbs-username">正在获取信息</b></div>
-                <div><span id="bbs-rank" class="vip-hinter" data-vip-type="1" style="display: none;">等级</span></div>
+            <div class="info-right-wrapper">
+                <div class="username-wrapper"><b id="bbs-username">正在获取信息</b></div>
+                <div class="rank-wrapper"><span id="bbs-rank" style="display: none;">等级</span></div>
             </div>
         </div>
-        
-            <div id="rankexpprodiv" class="u-progress u-progress-c1">
-                <span id="rankexppro" class="pgbar" style="width:30%">
-                    <a id="rankexp" style="float:right;margin-right:1px;font-size:10px">1000/2000</a>
-                </span>
+        <div class="rank">
+            <div id="bbs-rank-progress-bar-wrapper" class="progress-bar-wrapper">
+                <span id="bbs-rank-progress-bar" class="progress-bar" style="width:30%"><a>1000/2000</a></span>
             </div>
-        
-        <div id="divmessage" class="info" style="display:none;">
-            <a class="linkToCurrency on" target="_blank"
-               title="消息">
-                <b id="pm_ntc" class="new"></b>
-                <b id="bbs-new-pm" class="outside">消息</b>
-            </a>
-            <span class="pipe">|</span>
-            <a class="linkToCurrency on" target="_blank"
-               title="提醒" style="left: 85px;">
-                <b id="myprompt" class="new"></b>
-                <b id="bbs-new-notice" class="outside">提醒</b>
-            </a>
+        </div>
+        <div class="messages">
+            <div id="bbs-message-wrapper" style="display:none;">
+                <a href="http://www.mcbbs.net/home.php?mod=space&do=pm" target="_blank" title="消息">
+                    <b class="message-icon-pm"></b>
+                    <b id="bbs-new-pm" class="outside">消息</b>
+                </a>
+                <span class="pipe">&nbsp;|&nbsp;</span>
+                <a href="http://www.mcbbs.net/home.php?mod=space&do=notice" target="_blank" title="提醒">
+                    <b class="message-icon-notice"></b>
+                    <b id="bbs-new-notice" class="outside">提醒</b>
+                </a>
+            </div>
         </div>
     </div>
-    <div class="info">
+    <div class="actions">
         <button id="bbs-open">打开MCBBS首页</button>
         <button id="bbs-login" style="display: none;">登录账号</button>
         <button id="bbs-sign" disabled="disabled">一键签到</button>

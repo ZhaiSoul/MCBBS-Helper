@@ -1,91 +1,61 @@
 var bkg_page = chrome.extension.getBackgroundPage();
-var bbsurl = "http://www.mcbbs.net"
+var bbsurl = 'http://mcbbs.tvt.im'//"http://www.mcbbs.net"
 
 //API地址
 var headurl = bbsurl+"/uc_server/avatar.php?uid=";//头像API
 var userprofile = bbsurl+"/api/mobile/index.php?module=profile";//用户信息API
 //每次调用API都将缓存消息、提醒、用户名等信息（反正有啥用得到的信息就缓存）
 
-chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
-    if (notifId === myNotificationID) {
-        if (btnIdx === 0) {
-			var url = bbsurl;
-			chrome.tabs.create({
-			url:bbsurl+"/home.php?mod=space&do=notice"
-			});
+var mcbbs = new UserMCBBS(bbsurl, function () {
+	$('#bbs-new-pm').text(mcbbs.pm > 0 ? '消息(' + mcbbs.pm + ')' : '消息');
+	$('#bbs-new-notice').text(mcbbs.notice > 0 ? '提醒(' + mcbbs.notice + ')' : '提醒');
+	if (mcbbs.userInfo) {
+		$('#bbs-username').html(mcbbs.userInfo.username);
+		$('#bbs-rank').html(mcbbs.userInfo.grouptitle);
+		$('#bbs-avatar').attr('src', mcbbs.userInfo.avatar);
+
+		$('#bbs-message-wrapper').show(100);
+		$('#bbs-rank').show();
+
+		$('#bbs-sign').removeAttr('disabled');
+		$('#bbs-user-settings').removeAttr('disabled');
+		$('#bbs-rank-progress-bar').css('width', mcbbs.userInfo.credits / mcbbs.userInfo.creditslower * 100 + '%');
+		$('#bbs-rank-progress-bar a').html(mcbbs.userInfo.credits + '/' + mcbbs.userInfo.creditslower);
+	} else {
+		$('#bbs-username').html('请登录账号');
+		$('#bbs-user-settings').hide();
+		$('#bbs-sign').hide();
+		$('#bbs-login').show(200);
+	}
+});
+
+chrome.notifications.onButtonClicked.addListener(function (notifId, btnIdx) {
+	if (notifId === myNotificationID) {
+		if (btnIdx === 0) {
+			chrome.tabs.create({url: bbsurl + "/home.php?mod=space&do=notice"});
 		}
-    }
-}),
+	}
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     $('#bbs-open').click(OnClickOpenBBS);
     $('#bbs-sign').click(OnClickSign);
     $('#bbs-user-settings').click(OnClickSettings);
-    $('#bbs-new-notice').click(OnClickOpenMessage);
     $('#bbs-cyq-attack').click(OnClickCYQ);
     $('#bbs-rank').hover(OnMouseEnterExp, OnMouseLeaveExp);
     $('#bbs-login').click(OnClickLogin);
-	$('#bbs-new-pm').click(OnClickOpenPM);
-		// getUserInfo(function (array){
-		// 	console.log(array);
-		// 	var uid = array[0];
-		// 	if(array!=null){
-		// 		if(uid!=0){
-		// 			if(array[3]<=0||array[3]==null||array[3]==undefined){
-		// 			}else{
-		// 				$("#bbs-new-notice").text("提醒("+array[3]+")")
-		// 				$("#bbs-new-pm").text("消息("+array[4]+")")
-		// 			}
-		// 			$("#bbs-username").html(array[1]);
-		// 			$("#bbs-rank").html(array[2]);
-		// 			$("#bbs-avatar").attr("src",headurl+array[0]);
-        //
-		// 			/* 显示隐藏的等级与消息框 */
-		// 			$("#divmessage").show(400);
-		// 			$("#bbs-rank").show();
-		//
-		// 			/* 设置允许点击签到和用户设置按钮 */
-		// 			$("#bbs-sign").removeAttr("disabled");
-		// 			$("#bbs-user-settings").removeAttr("disabled");
-        //
-		// 			var uprank = array[5]/array[6];
-		// 			console.log(uprank);
-		// 			$("#rankexppro").attr("style","width:"+uprank*100+"%");
-		// 			$("#rankexp").html(array[5]+"/"+array[6]);
-		//
-		// 		}else{
-		// 			$("#bbs-username").html("请登录账号");
-		// 			$("#bbs-user-settings").hide();
-		// 			$("#bbs-sign").hide();
-		// 			$('#bbs-login').click(OnClickLogin);
-		// 			$("#bbs-login").show(200);
-		// 		}
-		// 	}else{
-		// 			$("#bbs-username").html("无法连接到服务器");
-		// 			$("#bbs-user-settings").hide();
-		// 			$("#bbs-sign").hide();
-		// 	}
-		// });
-
-    var mcbbs = new UserMCBBS();
-
     $(function () {
         chrome.tabs.getSelected(null, function (a) {
-            if (a.url.match(/:\/\/(.[^\/]+)/)[1] == "www.mcbbs.net") {
+            if (bbsurl.indexOf(a.url.match(/:\/\/(.[^\/]+)/)[1]) >= 0) {
                 $("#bbs-open").hide();
-                var num = parseInt(10 * Math.random());
-                if (num > 4) {
-                    $("#bbs-cyq-attack").html("一键CYQ Attack");
-                } else {
-                    $("#bbs-cyq-attack").html("一键DDOC");
-                }
-                $("#bbs-cyq-attack").show();
+				$("#bbs-cyq-attack").html(Math.random() > 0.4 ? "一键CYQ Attack" : "一键DDOC").show();
                 $("#bbs-user-settings").show();
             } else {
                 $("#bbs-cyq-attack").hide();
                 $("#bbs-user-settings").hide();
             }
         });
-        mcbbs.syncUserInfo(mcbbs.update);
+        mcbbs.syncUserInfo();
 	});
 });
 
@@ -117,20 +87,6 @@ function CheckUpdate(){
 	
 }
 
-function connectToServer(url, callback) {
-    callback = callback || function () {};
-	$.ajax({
-        url: url,
-        contentType: "MCBBSHelper Plugin/1.0(zhaisoul.650@gmail.com)"
-    }).done(function (data) {
-        console.log(data);
-        callback(data);
-    }).fail(function () {
-        callback(null);
-    });
-}
-
-
 function compareVersion(a, b) {
     if (a === b) return 0;
     for (var c = a.split("."), d = b.split("."), e = Math.min(c.length, d.length), f = 0; f < e; f++) {
@@ -146,24 +102,24 @@ function OnClickCYQ(){
 }
 
 function OnMouseEnterExp(){
-	$("#rankexpprodiv").animate({  
+	$("#bbs-rank-progress-bar-wrapper").animate({  
 		marginTop:'5px',  
 		opacity:'1'
 	});  
 }
 
 function OnMouseLeaveExp(){
-	$("#rankexpprodiv").animate({  
+	$("#bbs-rank-progress-bar-wrapper").animate({
 		marginTop:'-5px',  
 		opacity:'0'
 	});  
 }
 
 function OnClickLogin(){
-		var url = bbsurl;
+	var url = bbsurl;
 	chrome.tabs.create({
-            url:bbsurl+"/member.php?mod=logging&action=login"
-        });
+        url: bbsurl+"/member.php?mod=logging&action=login"
+    });
 }
 
 function OnClickSign(e){
@@ -171,17 +127,9 @@ function OnClickSign(e){
 }
 
 function OnClickOpenBBS(e){
-	var url = bbsurl;
 	chrome.tabs.create({
-            url:bbsurl
-        });
-}
-
-function OnClickOpenMessage(e){
-	var url = bbsurl;
-	chrome.tabs.create({
-            url:bbsurl+"/home.php?mod=space&do=notice"
-        });
+		url:bbsurl
+	});
 }
 
 function OnClickOpenPM(e){
@@ -192,10 +140,9 @@ function OnClickOpenPM(e){
 }
 
 function OnClickSettings(e){
-	var url = bbsurl;
 	chrome.tabs.create({
-            url:bbsurl+"/home.php?mod=spacecp"
-        });
+		url:bbsurl+"/home.php?mod=spacecp"
+	});
 }
 
 /*
@@ -304,68 +251,17 @@ function getDynamic(callback) {
 // TODO: to be rewritten
 function GetMessage(){	
 	console.log("开始获取新提醒 "+Date());
-	getUserInfo(function(array){
-		if(array!=null){
-			if(array[3]<=0||array[3]==null||array[3]==undefined){
-			}else{
-				console.log(array);
-				chrome.notifications.create({type: "basic", iconUrl: "icon.png", title: "MCBBS扩展插件",buttons: [{
-						title: "点击查看"
-				}], message: "你有"+array[3]+"条新提醒，请点击查看！"},function(id) {
+	mcbbs.syncUserInfo(function () {
+		chrome.notifications.create({
+			type: "basic",
+			iconUrl: "icon.png",
+			title: "MCBBS扩展插件",
+			buttons: [{title: "点击查看"}],
+			message: "你有" + mcbbs.notice + "条新提醒，请点击查看！"
+		}, function (id) {
 			myNotificationID = id;
-				});
-			}
-		}
+		});
 	});
-}
-
-// TODO: to be removed
-function getUserInfo(callback){
-	connectToServer(userprofile, function (obj) {
-        if (obj) {
-            var arr = new Array(7);
-            arr[0] = obj.Variables.member_uid;
-            if (obj.Variables.member_uid != 0) {
-                arr[1] = obj.Variables.member_username;
-                arr[2] = obj.Variables.space.group.grouptitle;
-                arr[3] = obj.Variables.space.newprompt;
-                arr[4] = obj.Variables.space.newpm;
-                arr[5] = obj.Variables.space.credits;
-                obj.Variables.space.group.creditslower != undefined ? arr[6] = obj.Variables.space.group.creditslower : arr[6] = arr[5];
-            }
-            callback(arr);
-        } else {
-            callback(null);
-        }
-	});
-	/*
-	var xmlHttpAnother = new XMLHttpRequest();
-	var userHome = bbsurl+"/api/mobile/index.php?module=profile";
-	xmlHttpAnother.open('GET', userHome);
-	xmlHttpAnother.onload = function (e) {
-		if (xmlHttpAnother.readyState === 4) {
-			if (xmlHttpAnother.status === 200) {
-				obj = JSON.parse(xmlHttpAnother.responseText);
-				var arr = new Array(7);
-				arr[0] = obj.Variables.member_uid;
-				if(obj.Variables.member_uid!=0){
-					arr[1] = obj.Variables.member_username;
-					arr[2] = obj.Variables.space.group.grouptitle;
-					arr[3] = obj.Variables.space.newprompt;
-					arr[4] = obj.Variables.space.newpm;
-					arr[5] = obj.Variables.space.credits;
-					obj.Variables.space.group.creditslower!=undefined ? arr[6] = obj.Variables.space.group.creditslower : arr[6] = arr[5];
-					console.log(arr);
-				}
-				callback(arr);
-			}else{
-				console.log("无法连接到服务器");
-				callback(null);
-			}
-		}
-	}
-	xmlHttpAnother.send(null);
-	*/
 }
 
 var myNotificationID = null;
@@ -373,48 +269,28 @@ var myNotificationID = null;
 // TODO: to be rewritten
 function getNugget() {
 	console.log("开始自动签到");
-	var xmlHttp = new XMLHttpRequest(), xmlHttpAnother = new XMLHttpRequest();
-	xmlHttp.open('GET', 'http://www.mcbbs.net/home.php?mod=task&do=apply&id=10', true);
-	xmlHttp.onload = function (e) {
-		if (xmlHttp.readyState === 4) {
-			if (xmlHttp.status === 200) {
-				xmlHttpAnother.open('GET', 'http://www.mcbbs.net/home.php?mod=task&do=draw&id=10', true);
-				xmlHttpAnother.onload = function (e) {
-					if (xmlHttpAnother.readyState === 4) {
-						if (xmlHttpAnother.status === 200) {
-							var regex = /<div\ id=\"messagetext\"\ class=\"alert_\w*">\s*<p>([^<]*)</;
-							var result = (regex.exec(xmlHttp.responseText) || [])[1];
-							
-							var options = {
-							type: "basic",
-							title: "每日金粒领取 - "+new Date().toLocaleDateString(),
-							message: result
-							}
-							getUserInfo(function(array) {
-								if(array!=null){
-									var xhr = new XMLHttpRequest();
-									xhr.open("GET", headurl+array[0]+"&size=big");
-									xhr.setRequestHeader("Access-Control-Allow-Origin", "http://attachment.mcbbs.net");
-									xhr.responseType = "blob";
-									xhr.onload = function(){
-										var blob = this.response;
-										options.iconUrl = window.URL.createObjectURL(blob);
-										chrome.notifications.create(options);
-									};
-									xhr.send(null);
-								}
-							});
-						} else {
-							chrome.notifications.create({type: "basic", iconUrl: "icon.png", title: "获取金粒失败", message: "网络出错了？"});
-						}
-					}
-				}
-				xmlHttpAnother.send(null);
-			} else {
-				chrome.notifications.create({type: "basic", iconUrl: "icon.png", title: "获取金粒失败", message: "网络出错了？"});
-			}
-		}
-	}
-	xmlHttp.send(null);
-    
+	$.get(bbsurl + '/home.php?mod=task&do=apply&id=10').fail(getNuggetFailed).done(function (data) {
+		$.get(bbsurl + '/home.php?mod=task&do=draw&id=10').fail(getNuggetFailed).done(function () {
+			var regex = /<div id="messagetext" class="alert_\w*">\s*<p>([^<]*)/;
+			var result = (regex.exec(data) || [])[1];
+
+			mcbbs.syncUserInfo(function () {
+				chrome.notifications.create({
+					type: "basic",
+					iconUrl: mcbbs.userInfo.avatar,
+					title: "每日金粒领取 - " + new Date().toLocaleDateString(),
+					message: result
+				});
+			});
+		});
+	});
+}
+
+function getNuggetFailed() {
+	chrome.notifications.create({
+		type: "basic",
+		iconUrl: "icon.png",
+		title: "获取金粒失败",
+		message: "网络出错了？"
+	});
 }
