@@ -1,12 +1,24 @@
 {
     "manifest_version": 2,
-
     "name": "MCBBS扩展插件",
     "description": "能够实现MCBBS消息提醒等功能",
     "version": "1.0",
     "background": {
-        "scripts": ["resource.js", "core.js", "background.js"]
+        "scripts": [
+            "resource.js",
+            "core.js",
+            "background.js"
+        ]
     },
+    "content_scripts": [{
+        "matches": [
+            "http://www.mcbbs.net/*",
+            "http://mcbbs.tvt.im/*"
+        ],
+        "js": [
+            "injection.js"
+        ]
+    }],
     "browser_action": {
         "default_icon": "icon.png",
         "default_popup": "popup.html"
