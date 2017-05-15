@@ -1,9 +1,9 @@
 CheckUpdate();
 chrome.tabs.onActivated.addListener(function (e) {
 	var time = Math.floor(Date.now() / 10000000);
-    if (time != chrome.storage.time) {
+    if (time != localStorage.time) {
         chrome.tabs.get(e.tabId, getNugget);
-        chrome.storage.time = time;
+        localStorage.time = time;
     }
 });
 chrome.alarms.onAlarm.addListener(function (a) {

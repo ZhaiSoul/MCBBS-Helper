@@ -2,7 +2,7 @@
  * Created by zzzz on 3/17/17.
  */
 
-function UserMCBBS(urlPrefix, callback) {
+function UserMCBBS(bbsUrlPrefix, updateCallback) {
     this.uid = null;
     // {
     //   avatar: 'http://xxxxxx&size=medium',
@@ -17,8 +17,8 @@ function UserMCBBS(urlPrefix, callback) {
     this.notice = 0;
 
     var self = this;
-    var bbsUrlPrefix = urlPrefix;
-    var updateCallback = callback;
+    var headUrlPrefix = bbsUrlPrefix + "/uc_server/avatar.php?uid=";//头像API
+    var userProfileUrl = bbsUrlPrefix + "/api/mobile/index.php?module=profile";//用户信息API
 
     function saveToStorage(callback) {
         callback = callback || function () {};
@@ -56,7 +56,7 @@ function UserMCBBS(urlPrefix, callback) {
             self.userInfo = {
                 avatar: json['member_avatar']
                     .replace('size=small', 'size=middle')
-                    .replace('http://www.mcbbs.net', bbsUrlPrefix),
+                    .replace(/http:\/\/[^\/]+/, bbsUrlPrefix),
                 username: json['member_username'],
                 grouptitle: json['space'].group.grouptitle,
                 credits: json['space'].credits,

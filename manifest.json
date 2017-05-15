@@ -17,7 +17,8 @@
         ],
         "js": [
             "injection.js"
-        ]
+        ],
+        "all_frames": true
     }],
     "browser_action": {
         "default_icon": "icon.png",

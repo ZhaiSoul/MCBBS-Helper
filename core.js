@@ -132,141 +132,14 @@ function OnClickOpenBBS(e){
 	});
 }
 
-function OnClickOpenPM(e){
-	var url = bbsurl;
-	chrome.tabs.create({
-            url:bbsurl+"/home.php?mod=space&do=pm"
-        });
-}
-
 function OnClickSettings(e){
 	chrome.tabs.create({
 		url:bbsurl+"/home.php?mod=spacecp"
 	});
 }
 
-/*
-传统读取Cookie和正则截取网页获取信息
-function GetUID(callback){
-	bkg_page.chrome.cookies.get({
-		url: "http://www.mcbbs.net",
-		name: "ZxYQ_2132_st_p"
-	}, function (a) {
-		if(a==null){
-			_imageurl = (headurl+"3038") ,chrome.notifications.create({type: "basic", iconUrl: "icon.png", title: "MCBBS扩展插件", message: "登录失败，无法检测到cookies"});
-		}else{
-		 console.log("已获取到cookie，uid:"+(a.value.split("%"))[0]);
-		 uid = (a.value.split("%"))[0];
-		 callback(uid);
-		}
-	})
-}
-
-function GetWebInfo(callback){
-	GetUID(function (getuid){
-		var xmlHttpAnother = new XMLHttpRequest();
-		var userHome = bbsurl+"/misc.php?mod=faq";
-		xmlHttpAnother.open('GET', userHome);
-		xmlHttpAnother.onload = function (e) {
-			if (xmlHttpAnother.readyState === 4) {
-				if (xmlHttpAnother.status === 200) {
-					var UIDRegex = /<script\ type=\"[^"]*\">[^<、]*discuz_uid\ =\ '?(\d*)?/;
-					var usernameRegex = /<a\ href=\"[^"]*\"\ [^>]* title=\"访问我的空间\">*(\S[^</]*)/;
-					var RankRegex = /<a\ href=\"[^"]*\"\ id=\"g_upmine\"[^>]*>*(\S[^</]*)/;
-					var promptRegex = /<a\ href=\"[^"]*\"\ id=\"myprompt\"[^>]*>[^(]*\(?(\d*)\)?/;
-					var BBSUID = xmlHttpAnother.responseText.match(UIDRegex)[1];
-					var BBSUsername = xmlHttpAnother.responseText.match(usernameRegex)[1];
-					var BBSRank = xmlHttpAnother.responseText.match(RankRegex)[1];
-					var BBSprompt = xmlHttpAnother.responseText.match(promptRegex)[1];				
-					var arr = new Array(4);
-					arr[0] = BBSUID;
-					arr[1] = BBSUsername;
-					arr[2] = BBSRank;
-					arr[3] = BBSprompt;
-					console.log(arr);
-					callback(arr);
-				}
-			}
-		}
-		xmlHttpAnother.send(null);
-	});
-}
-function GetMessage(){	
-	console.log("开始获取新提醒 "+Date());
-	GetWebInfo(function(array){
-		if(array[2]<0||array[2]==""){
-			
-		}else{
-			console.log(array);
-			chrome.notifications.create({type: "basic", iconUrl: "icon.png", title: "MCBBS扩展插件",buttons: [{
-					title: "点击查看"
-			}], message: "你有"+array[2]+"条新提醒，请点击查看！"},function(id) {
-        myNotificationID = id;
-			});
-		}
-	});
-}
-
-function GetWebInfo(callback){
-	GetUID(function (getuid){
-		var xmlHttpAnother = new XMLHttpRequest();
-		var userHome = bbsurl+"/misc.php?mod=faq";
-		xmlHttpAnother.open('GET', userHome);
-		xmlHttpAnother.onload = function (e) {
-			if (xmlHttpAnother.readyState === 4) {
-				if (xmlHttpAnother.status === 200) {
-					var UIDRegex = /<script\ type=\"[^"]*\">[^<、]*discuz_uid\ =\ '?(\d*)?/;
-					var usernameRegex = /<a\ href=\"[^"]*\"\ [^>]* title=\"访问我的空间\">*(\S[^</]*)/;
-					var RankRegex = /<a\ href=\"[^"]*\"\ id=\"g_upmine\"[^>]*>*(\S[^</]*)/;
-					var promptRegex = /<a\ href=\"[^"]*\"\ id=\"myprompt\"[^>]*>[^(]*\(?(\d*)\)?/;
-					var BBSUID = xmlHttpAnother.responseText.match(UIDRegex)[1];
-					var BBSUsername = xmlHttpAnother.responseText.match(usernameRegex)[1];
-					var BBSRank = xmlHttpAnother.responseText.match(RankRegex)[1];
-					var BBSprompt = xmlHttpAnother.responseText.match(promptRegex)[1];				
-					var arr = new Array(4);
-					arr[0] = BBSUID;
-					arr[1] = BBSUsername;
-					arr[2] = BBSRank;
-					arr[3] = BBSprompt;
-					console.log(arr);
-					callback(arr);
-				}
-			}
-		}
-		xmlHttpAnother.send(null);
-	});
-}
-
-function getDynamic(callback) {
-	
-	GetUID(function(getuid){
-		var _imageurl = "";
-		_imageurl = headurl+getuid;
-		console.log(_imageurl);
-		callback(_imageurl);
-	})
-}
-*/
-
-// TODO: to be rewritten
-function GetMessage(){	
-	console.log("开始获取新提醒 "+Date());
-	mcbbs.syncUserInfo(function () {
-		chrome.notifications.create({
-			type: "basic",
-			iconUrl: "icon.png",
-			title: "MCBBS扩展插件",
-			buttons: [{title: "点击查看"}],
-			message: "你有" + mcbbs.notice + "条新提醒，请点击查看！"
-		}, function (id) {
-			myNotificationID = id;
-		});
-	});
-}
-
 var myNotificationID = null;
 
-// TODO: to be rewritten
 function getNugget() {
 	console.log("开始自动签到");
 	$.get(bbsurl + '/home.php?mod=task&do=apply&id=10').fail(getNuggetFailed).done(function (data) {
