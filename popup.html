@@ -51,12 +51,23 @@
         font-size: 16px;
     }
 
+    .info .user .info-right-wrapper a {
+        color: #262626;
+    }
+
     .info .user .info-right-wrapper .username-wrapper {
         margin: 5px;
     }
 
-    .info .user .info-right-wrapper .rank-wrapper {
+    .info .user .info-right-wrapper .rank{
+        font-size: 12px;
+        color: #000000;
         margin: 5px;
+    }
+
+    .info .user .info-right-wrapper .rank .rank-wrapper {
+        
+        
         display: inline-block;
         line-height: 15px;
         padding: 1px 3px 1px 3px;
@@ -66,6 +77,30 @@
         border-radius: 3px
     }
 
+    .info .user a {
+        text-decoration: none;
+        font-size: 10px;
+    }
+
+    .info .user .message-icon-notice {
+        background-image: url(images/notice.gif);
+        position: relative;
+        z-index: 1;
+        height: 13px;
+        min-width: 12px;
+        display: inline-block;
+        margin-bottom: -1px
+    }
+
+    .info .user .message-icon-pm {
+        background-image: url(images/pm.png);
+        position: relative;
+        z-index: 1;
+        height: 15px;
+        width: 16px;
+        display: inline-block;
+        margin-bottom: -3px
+    }
     .info .rank {
         margin: 1px auto 0
     }
@@ -95,34 +130,6 @@
         margin: 1px 2px;
         font-size: 12px;
     }
-    
-    .info .messages {
-        margin: 10px 0;
-        clear: both;
-    }
-
-    .info .messages a {
-        text-decoration: none;
-        font-size: 1.25em;
-    }
-
-    .info .messages .message-icon-notice {
-        background-image: url(images/notice.gif);
-        position: relative;
-        z-index: 1;
-        height: 13px;
-        min-width: 13px;
-        display: inline-block;
-    }
-
-    .info .messages .message-icon-pm {
-        background-image: url(images/pm.png);
-        position: relative;
-        z-index: 1;
-        height: 15px;
-        width: 16px;
-        display: inline-block;
-    }
 
     .actions {
         margin: 5px 0;
@@ -130,32 +137,46 @@
 
     .actions button {
         font-size: 10px;
-        color: #666;
+        color: #e7e7e7;
         cursor: pointer;
         text-align: center;
-        border-radius: 2px;
+        
         border: solid 1px #ddd;
         width: calc(50% - 2px);
-        height: 30px;
+        height: 40px;
         margin: 5px 0;
-        background: #fff linear-gradient(to top, #f8f8f8, #fff);
+        background: url(images/button.png);
+        background-size:cover;
         transition: .2s all;
         outline: 0
     }
 
     .actions button:hover {
         color: #fff;
-        border: solid 1px #008bbc;
-        background-image: linear-gradient(to top, #009cd6, #00aae0);
+        border: solid 1px #747474;
         box-shadow: rgba(255, 255, 255, .2) 0 1px 0 0 inset, 0 1px 1px #CCC
     }
 
     .actions button:active {
-        color: #fff;
-        border: solid 1px #0082b0;
-        background-image: linear-gradient(to top, #00a6dc, #00bee7);
+        color: #c8c8c8;
+        border: solid 1px #747474;
         box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, .15), 0 1px 2px 0 rgba(0, 0, 0, .05)
     }
+
+    .special_photo {
+    width: 95px;
+    height: 95px;
+    float: left;
+    display: inline-block;
+    background: url(images/special_photo_bg.png) 0 0 no-repeat;
+    }
+
+    .special_photo img {
+    width: 85px;
+    height: 85px;
+    border: 5px solid rgba(0,0,0,0);
+    }
+    
 </style>
 <script src="user.js"></script>
 <script src="core.js"></script>
@@ -174,20 +195,14 @@
     <div class="info">
         <div class="user">
             <div class="info-left-wrapper">
-                <img id="bbs-avatar" src="icon.png" width="48"/>
+                <a href="" class="special_photo">
+                    <img id="bbs-avatar" src="images/icon.png">
+                </a>
             </div>
             <div class="info-right-wrapper">
                 <div class="username-wrapper"><b id="bbs-username">正在获取信息</b></div>
-                <div class="rank-wrapper"><span id="bbs-rank" style="display: none;">等级</span></div>
-            </div>
-        </div>
-        <div class="rank">
-            <div id="bbs-rank-progress-bar-wrapper" class="progress-bar-wrapper">
-                <span id="bbs-rank-progress-bar" class="progress-bar" style="width:30%"><a>1000/2000</a></span>
-            </div>
-        </div>
-        <div class="messages">
-            <div id="bbs-message-wrapper" style="display:none;">
+                <div class="rank">等级:<div class="rank-wrapper"><span id="bbs-rank" style="display: none;">等级</span></div></div>
+                <div id="bbs-message-wrapper" style="display:none;">
                 <a href="http://www.mcbbs.net/home.php?mod=space&amp;do=pm" target="_blank" title="消息">
                     <b class="message-icon-pm"></b>
                     <b id="bbs-new-pm" class="outside">消息</b>
@@ -198,10 +213,19 @@
                     <b id="bbs-new-notice" class="outside">提醒</b>
                 </a>
             </div>
+            </div>
+        </div>
+        <div class="rank">
+            <div id="bbs-rank-progress-bar-wrapper" class="progress-bar-wrapper">
+                <span id="bbs-rank-progress-bar" class="progress-bar" style="width:30%"><a>1000/2000</a></span>
+            </div>
+        </div>
+        <div class="messages">
+            
         </div>
     </div>
     <div class="actions">
-        <button id="bbs-open">打开MCBBS首页</button>
+        <button id="bbs-open">MCBBS首页</button>
         <button id="bbs-login" style="display: none;">登录账号</button>
         <button id="bbs-sign" disabled="disabled">一键签到</button>
         <button id="bbs-user-settings" disabled="disabled">账号设置</button>
