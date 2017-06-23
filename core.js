@@ -140,6 +140,25 @@ function OnClickSettings(e){
 
 var myNotificationID = null;
 
+function GetMessage() {
+	console.log("开始获取新提醒 "+Date());
+	mcbbs.syncUserInfo(function () {
+		console.log(mcbbs.userInfo);
+		var messageCount = mcbbs.notice + mcbbs.pm;
+		if (messageCount > 0) {
+			chrome.notifications.create({
+				type: "basic", 
+				iconUrl: "icon.png", 
+				title: "MCBBS扩展插件",
+				buttons: [{title: "点击查看"}], 
+				message: "你有" + messageCount + "条新提醒，请点击查看！"
+			}, function (id) {
+				myNotificationID = id;
+			});
+		}
+	});
+}
+
 function getNugget() {
 	console.log("开始自动签到");
 	$.get(bbsurl + '/home.php?mod=task&do=apply&id=10').fail(getNuggetFailed).done(function (data) {
