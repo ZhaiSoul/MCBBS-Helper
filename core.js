@@ -1,5 +1,5 @@
 var bkg_page = chrome.extension.getBackgroundPage();
-var bbsurl = 'http://mcbbs.tvt.im'//"http://www.mcbbs.net"
+var bbsurl = 'http://www.mcbbs.net';
 
 //API地址
 var headurl = bbsurl+"/uc_server/avatar.php?uid=";//头像API

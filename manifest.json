@@ -12,8 +12,7 @@
     },
     "content_scripts": [{
         "matches": [
-            "http://www.mcbbs.net/*",
-            "http://mcbbs.tvt.im/*"
+            "http://www.mcbbs.net/*"
         ],
         "js": [
             "injection.js"
@@ -35,7 +34,6 @@
         "activeTab",
         "notifications",
         "http://*.mcbbs.net/*",
-        "http://mcbbs.tvt.im/*",
         "webRequestBlocking",
         "cookies",
         "downloads"
