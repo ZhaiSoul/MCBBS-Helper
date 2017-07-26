@@ -14,7 +14,8 @@ chrome.alarms.onAlarm.addListener(function (a) {
         return !1
     }
 });
+
 chrome.alarms.create("GetMessage", {
-    periodInMinutes: 3
+    periodInMinutes: 10
 });
 GetMessage();
