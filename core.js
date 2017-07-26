@@ -144,7 +144,7 @@ function GetMessage() {
 	console.log("开始获取新提醒 "+Date());
 	mcbbs.syncUserInfo(function () {
 		console.log(mcbbs.userInfo);
-		var messageCount = mcbbs.notice + mcbbs.pm;
+		var messageCount = Number(mcbbs.notice) + Number(mcbbs.pm);
 		if (messageCount > 0) {
 			chrome.notifications.create({
 				type: "basic", 
@@ -154,6 +154,9 @@ function GetMessage() {
 				message: "你有" + messageCount + "条新提醒，请点击查看！"
 			}, function (id) {
 				myNotificationID = id;
+				setTimeout(function() {
+					chrome.notifications.clear(id);
+				}, 10000); 
 			});
 		}
 	});
