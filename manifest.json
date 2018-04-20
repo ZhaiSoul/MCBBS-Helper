@@ -17,11 +17,7 @@
     },
     "content_scripts": [{
         "matches": [
-<<<<<<< HEAD
             "*://*.mcbbs.net/"
-=======
-            "http://www.mcbbs.net/*"
->>>>>>> a00ae1deb644bb0515eed00204355cd312cae069
         ],
         "js": [
             "background.js"
@@ -41,12 +37,8 @@
         "storage",
         "activeTab",
         "notifications",
-<<<<<<< HEAD
         "cookies",
         "*://*.mcbbs.net/*",
-=======
-        "http://*.mcbbs.net/*",
->>>>>>> a00ae1deb644bb0515eed00204355cd312cae069
         "webRequestBlocking"
     ]
 }
