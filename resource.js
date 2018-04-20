@@ -1,5 +1,7 @@
 function getOption(a) {
-	return null===localStorage.getItem(a)&&localStorage.setItem(a,defaultOptions[a]),localStorage.getItem(a)
+    return null===localStorage.getItem(a)
+    &&localStorage.setItem(a,defaultOptions[a]),
+    localStorage.getItem(a)
 }
 
 function setOption(a,b,c) {
@@ -8,5 +10,8 @@ function setOption(a,b,c) {
 
 defaultOptions = {
     MessageRefreshTime : "3",
-    version : "0.0.0"
+    HotThreadPush : true,
+    NoticePush : true,
+    Version : "0.0.0",
+    Cookies : "[]"
 }

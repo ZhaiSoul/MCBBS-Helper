@@ -1,9 +1,15 @@
 CheckUpdate();
+
+if((getOption("HotThreadPush")==="false"?false:true)==true){
+    console.log("推送热门贴");
+    GetHotThread();
+}
 chrome.tabs.onActivated.addListener(function (e) {
 	var time = Math.floor(Date.now() / 10000000);
-    if (time != localStorage.time) {
+    if (time != localStorage.Time) {
         chrome.tabs.get(e.tabId, getNugget);
-        localStorage.time = time;
+        localStorage.Time = time;
+        GetHotThread();
     }
 });
 chrome.alarms.onAlarm.addListener(function (a) {
@@ -16,6 +22,6 @@ chrome.alarms.onAlarm.addListener(function (a) {
 });
 
 chrome.alarms.create("GetMessage", {
-    periodInMinutes: 10
+    periodInMinutes: 30
 });
 GetMessage();

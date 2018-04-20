@@ -20,38 +20,28 @@
 					<h1 id="logo"><a href="index.html">MCBBS助手</a></h1>
 					<nav id="nav">
 						<ul>
-							<li><a href="index.html">基础设置</a></li>
-							<li><a href="elements.html">版主助手</a></li>
-							<li><a href="#" class="button special">关于</a></li>
+							<li><a href="settings.html">基础设置</a></li>
+							<li style="display: none;"><a href="elements.html">版主助手</a></li>
+							<li style="display: none;"><a href="#" class="button special">关于</a></li>
 						</ul>
 					</nav>
 				</header>
-                <div class="container">                
-                    <section>
-                        <h3>监控设置</h3>
-                            <div class="6u 12u$(medium)">
-                                <input type="checkbox" id="cb_Monitors" name="cb_Monitors">
-                                <label for="cb_Monitors">开启推送监控</label>
-                            </div>
-                    </section>
+                <div class="container">
                     <section>
                         <h3>推送设置</h3>
                             <div class="6u 12u$(medium)">
-                                <input type="checkbox" id="cb_NoticePush" name="cb_NoticePush">
+                                <input type="checkbox" id="cb_NoticePush" name="checkboxSetting">
                                 <label for="cb_NoticePush">开启新提醒推送</label>
                             </div>
                             <div class="6u 12u$(medium)">
-                                <input type="checkbox" id="cb_pmPush" name="cb_pmPush">
-                                <label for="cb_pmPush">开启新消息推送</label>
-                            </div>
-                            <div class="6u 12u$(medium)">
-                                <input type="checkbox" id="cb_hfPush" name="cb_hfPush">
-                                <label for="cb_hfPush">开启热门贴推送</label>
+                                <input type="checkbox" id="cb_HotThreadPush" name="checkboxSetting">
+                                <label for="cb_HotThreadPush">开启热门贴推送</label>
                             </div>
                     </section>
                 </div>
 		</div>
-		<div id="adminPage" class="container">
+		
+		<div id="adminPage" class="container" style="display: none;">
 			<div class="6u 12u$(medium)">
 				<h3>版主版块监控</h3>
 				<div class="6u 12u$(medium)">
@@ -108,7 +98,6 @@
 				</table>
 			</div>
 		</div>
-            <script src="resource.js"></script>
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.scrolly.min.js"></script>
 			<script src="assets/js/jquery.dropotron.min.js"></script>
@@ -117,10 +106,9 @@
 			<script src="assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>      
-			
-			<script src="settings.js"></script>  
 			<script src="user.js"></script>
+			<script src="resource.js"></script>
 			<script src="core.js"></script>
-			<script src="resource.js"></script>			
+			<script src="settings.js"></script>
     </body>
 </html>

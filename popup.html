@@ -141,6 +141,7 @@
         cursor: pointer;
         text-align: center;
         
+        vertical-align:middle;
         border: solid 1px #ddd;
         width: calc(50% - 5px);
         height: 43px;
@@ -148,7 +149,8 @@
         background: url(images/button.png);
         background-size:cover;
         transition: .2s all;
-        outline: 0
+        outline: 0;
+        line-height:43px;
     }
 
     .actions button:hover {
@@ -161,6 +163,24 @@
         color: #c8c8c8;
         border: solid 1px #747474;
         box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, .15), 0 1px 2px 0 rgba(0, 0, 0, .05)
+    }
+
+    .actions span{
+    
+    cursor: pointer;
+    line-height:43px;
+    text-align: center;
+    
+    display: block;
+    overflow: hidden;
+    }
+
+    .actions span img{
+    height: 25px;
+    margin-left: -10px;
+    margin-top: -6px;
+    margin-right: 2px;
+    vertical-align:middle;
     }
 
     .special_photo {
@@ -182,6 +202,8 @@
 <script src="core.js"></script>
 <script src="jquery-3.1.1.min.js"></script>
 <script src="resource.js"></script>
+<script src="share.js"></script>
+
 <title>MCBBS助手</title>
 </head>
 <body>
@@ -224,16 +246,24 @@
             
         </div>
     </div>
+    <div class="info">
+        <div class="actions">
+            <button id="bbs-open">MCBBS首页</button>
+            <button id="bbs-login" style="display: none;">登录账号</button>
+            <button id="bbs-sign" disabled="disabled">一键签到</button>
+            <button id="bbs-user-settings" disabled="disabled">账号设置</button>
+            <button id="bbs-cyq-attack">一键CYQ Attack</button>
+            <button id="bbs-i-feel-lucky">手气不错!</button>
+            
+        </div>
+    </div>
+    
     <div class="actions">
-        <button id="bbs-open">MCBBS首页</button>
-        <button id="bbs-login" style="display: none;">登录账号</button>
-        <button id="bbs-sign" disabled="disabled">一键签到</button>
-        <button id="bbs-user-settings" disabled="disabled">账号设置</button>
-        <button id="bbs-cyq-attack">一键CYQ Attack</button>
-    </div>
-    <div>
         <!-- 这里是功能扩展区，比如网页分享或者搜索 -->
+        <button id="bbs-WeiboShare" style="display: none;"><span><img src="images/weibo.png" >分享到微博</span></button>
+        <button id="bbs-QzoneShare" style="display: none;"><span><img src="images/qzone-logo.png" >分享到空间</span></button>
     </div>
+    
 </div>
 </body>
 </html>

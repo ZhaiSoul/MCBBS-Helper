@@ -1,23 +1,26 @@
 {
     "manifest_version": 2,
     "name": "MCBBS扩展插件",
-    "description": "能够实现MCBBS消息提醒等功能",
-    "version": "0.5",
+    "description": "能够实现MCBBS消息提醒与热门贴推送等功能，让你使用MCBBS更加轻松容易。",
+    "version": "0.7",
+    "update_url": "http://clients2.google.com/service/update2/crx",
     "background": {
         "scripts": [
             "jquery-3.1.1.min.js",
             "user.js",
             "resource.js",
             "core.js",
-            "background.js"
+            "background.js",
+            "changeuser.js",
+            "share.js"
         ]
     },
     "content_scripts": [{
         "matches": [
-            "http://www.mcbbs.net/*"
+            "*://*.mcbbs.net/"
         ],
         "js": [
-            "injection.js"
+            "background.js"
         ],
         "all_frames": true
     }],
@@ -28,14 +31,15 @@
     "icons": {
         "128": "icon.png"
     },
-    //"options_page": "settings.html",
+    "options_page": "settings.html",
     "permissions": [
         "alarms",
         "tabs",
         "storage",
         "activeTab",
         "notifications",
-        "http://*.mcbbs.net/*",
+        "cookies",
+        "*://*.mcbbs.net/*",
         "webRequestBlocking"
     ]
 }

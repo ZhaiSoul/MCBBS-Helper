@@ -2,7 +2,7 @@
  * Created by zzzz on 3/17/17.
  */
 
-function UserMCBBS(bbsUrlPrefix, updateCallback) {
+function UserBBS(bbsUrlPrefix, updateCallback) {
     this.uid = null;
     // {
     //   avatar: 'http://xxxxxx&size=medium',
@@ -24,22 +24,24 @@ function UserMCBBS(bbsUrlPrefix, updateCallback) {
         callback = callback || function () {};
         var storage = chrome.storage.local;
         if (self.uid) {
-            storage.set({'uid': self.uid, 'info': self.userInfo}, callback.bind(undefined));
+            storage.set({'uid': self.uid, 'info': self.userInfo,'cookies': self.cookies}, callback.bind(undefined));
         } else {
-            storage.remove(['uid', 'info'], callback.bind(undefined));
+            storage.remove(['uid', 'info', 'cookies'], callback.bind(undefined));
         }
     }
 
     function loadFromStorage(callback) {
         callback = callback || function () {};
         var storage = chrome.storage.local;
-        storage.get(['uid', 'info'], function (data) {
+        storage.get(['uid', 'info','cookies'], function (data) {
             if (data.uid) {
                 self.uid = data.uid;
                 self.userInfo = data.info;
+                self.cookies = data.cookies;
             } else {
                 self.uid = null;
                 self.userInfo = null;
+                self.cookies = null;
             }
             callback();
         });
@@ -61,6 +63,11 @@ function UserMCBBS(bbsUrlPrefix, updateCallback) {
                 grouptitle: json['space'].group.grouptitle,
                 credits: json['space'].credits,
                 creditslower: json['space'].creditslower || json['space'].credits
+            };
+            self.cookies ={
+                auth : json["auth"],
+                saltkey : json["saltkey"],
+                cookiepre : json["cookiepre"]
             };
             self.pm = json['space'].newpm || 0;
             self.notice = json['space'].newprompt || 0;
