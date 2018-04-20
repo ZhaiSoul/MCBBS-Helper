@@ -1,5 +1,9 @@
 var bkg_page = chrome.extension.getBackgroundPage();
+<<<<<<< HEAD
 var bbsurl = "http://www.mcbbs.net"
+=======
+var bbsurl = 'http://www.mcbbs.net';
+>>>>>>> a00ae1deb644bb0515eed00204355cd312cae069
 
 //API地址
 var headurl = bbsurl + "/uc_server/avatar.php?uid=";//头像API
@@ -147,6 +151,7 @@ function OnClickSettings(e) {
 var myNotificationID = null;
 
 function GetMessage() {
+<<<<<<< HEAD
 	if((getOption("NoticePush")==="false"?false:true)==true){
 		console.log("开始获取新提醒 " + Date());
 		mcbbs.syncUserInfo(function () {
@@ -167,6 +172,27 @@ function GetMessage() {
 			}
 		});
 	}
+=======
+	console.log("开始获取新提醒 "+Date());
+	mcbbs.syncUserInfo(function () {
+		console.log(mcbbs.userInfo);
+		var messageCount = Number(mcbbs.notice) + Number(mcbbs.pm);
+		if (messageCount > 0) {
+			chrome.notifications.create({
+				type: "basic", 
+				iconUrl: "icon.png", 
+				title: "MCBBS扩展插件",
+				buttons: [{title: "点击查看"}], 
+				message: "你有" + messageCount + "条新提醒，请点击查看！"
+			}, function (id) {
+				myNotificationID = id;
+				setTimeout(function() {
+					chrome.notifications.clear(id);
+				}, 10000); 
+			});
+		}
+	});
+>>>>>>> a00ae1deb644bb0515eed00204355cd312cae069
 }
 
 function getNugget() {
@@ -197,6 +223,7 @@ function getNuggetFailed() {
 		message: "网络出错了？"
 	});
 }
+<<<<<<< HEAD
 
 function FidToName(fid) {
 	return new Promise((resolve) => {
@@ -279,3 +306,5 @@ async function GetHotThread() {
 function randomFrom(lowerValue, upperValue) {
 	return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
 }
+=======
+>>>>>>> a00ae1deb644bb0515eed00204355cd312cae069

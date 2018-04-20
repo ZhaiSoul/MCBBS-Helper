@@ -22,6 +22,10 @@ chrome.alarms.onAlarm.addListener(function (a) {
 });
 
 chrome.alarms.create("GetMessage", {
+<<<<<<< HEAD
     periodInMinutes: 30
+=======
+    periodInMinutes: 10
+>>>>>>> a00ae1deb644bb0515eed00204355cd312cae069
 });
 GetMessage();
