@@ -1,6 +1,7 @@
 var bkg_page = chrome.extension.getBackgroundPage();
 var bbsurl = 'http://www.mcbbs.net';
 
+var updateserver = 'https://api.zhaisoul.com/MCBBS-Helper/v1/update.json';
 //API地址
 var headurl = bbsurl + "/uc_server/avatar.php?uid=";//头像API
 var userprofile = bbsurl + "/api/mobile/index.php?module=profile";//用户信息API
@@ -30,13 +31,15 @@ var mcbbs = new UserBBS(bbsurl, function () {
 });
 
 chrome.notifications.onButtonClicked.addListener(function (notifId, btnIdx) {
+	console.debug("目前有这些链接："+ThreadURL+"\n接下来应该输出"+notifId+"的链接\n试图获得的链接为："+ThreadURL[notifId]);
 	if (notifId === myNotificationID) {
 		if (btnIdx === 0) {
 			chrome.tabs.create({ url: bbsurl + "/home.php?mod=space&do=notice" });
 		}
-	}else if(notifId === myHotThreadID ){
+	}else{
 		if (btnIdx === 0) {
-			chrome.tabs.create({ url: ThreadURL });
+			chrome.tabs.create({ url: ThreadURL[notifId] });
+			chrome.notifications.clear(notifId)
 		}
 	}
 });
@@ -79,17 +82,40 @@ function CheckUpdate() {
 		setOption("Version", chrome.app.getDetails().version);
 		chrome.tabs.create({ url: chrome.extension.getURL("welcome.html?mod=fristrun") });
 	} else {
-		var c = compareVersion(a, b);
-		if (c < 0) {
-			console.log("更新完成，正在打开更新信息");
-			chrome.tabs.create({ url: chrome.extension.getURL("welcome.html?mod=new") });
-			setOption("Version", chrome.app.getDetails().version);
-		} else if (c > 0) {
-			console.log("新安装的为老旧版本");
-			setOption("Version", chrome.app.getDetails().version);
-		} else {
-			console.log("系统记录的版本与当前插件版本相同");
-		}
+		$.ajax({
+			url: updateserver,
+			contentType: 'MCBBSHelper Plugin/1.0(zhaisoul.650@gmail.com)'
+		}).done(function (data) {
+			if(data["version"]==b) {
+				console.log("当前为最新版本。");
+				var c = compareVersion(a, b);
+				if (c < 0) {
+					console.log("更新完成，正在打开更新信息");
+					chrome.tabs.create({ url: chrome.extension.getURL("welcome.html?mod=new") });
+					setOption("Version", chrome.app.getDetails().version);
+				} else if (c > 0) {
+					console.log("新安装的为老旧版本");
+					setOption("Version", chrome.app.getDetails().version);
+				} else {
+					console.log("系统记录的版本与当前插件版本相同");
+				}
+			}else{
+				console.log("检测到新版本"+data["version"]+"，正在等待Chrome自动更新");
+				setTimeout(function () {
+					console.log("超过30秒没有更新成功，提示用户手动更新");
+					chrome.notifications.create({
+						type: "basic",
+						iconUrl: "icon.png",
+						title: "MCBBS扩展插件有新版本了！",
+						buttons: [{ title: "立即更新" }],
+						message: "MCBBS扩展插件已经有新版本了，如果你无法使用Chrome的自动更新，建议你现在手动更新。"
+					}, function (id) {
+						ThreadURL[id] = data["url"];
+					});
+				}, 30000);
+				
+			}
+		});
 	}
 }
 
@@ -172,20 +198,21 @@ function GetMessage() {
 function getNugget() {
 	console.log("开始自动签到");
 	$.get(bbsurl + '/home.php?mod=task&do=apply&id=10').fail(getNuggetFailed).done(function (data) {
-		var regex = /<div id="messagetext" class="alert_\w*">\s*<p>([^<]*)/;
-		var result = (regex.exec(data) || [])[1];
+		$.get(bbsurl + '/home.php?mod=task&do=draw&id=10').fail(getNuggetFailed).done(function () {
+			var regex = /<div id="messagetext" class="alert_\w*">\s*<p>([^<]*)/;
+			var result = (regex.exec(data) || [])[1];
 
-		var avatarUrl = "icon.png";
-		if (mcbbs.userInfo)
-			avatarUrl = mcbbs.userInfo.avatar;
+			var avatarUrl = "icon.png";
+			if (mcbbs.userInfo)
+				avatarUrl = mcbbs.userInfo.avatar;
 
-		chrome.notifications.create({
-			type: "basic",
-			iconUrl: avatarUrl,
-			title: "每日金粒领取 - " + new Date().toLocaleDateString(),
-			message: result
+			chrome.notifications.create({
+				type: "basic",
+				iconUrl: avatarUrl,
+				title: "每日金粒领取 - " + new Date().toLocaleDateString(),
+				message: result
+			});
 		});
-
 	});
 }
 
@@ -200,7 +227,7 @@ function getNuggetFailed() {
 
 function FidToName(fid) {
 	return new Promise((resolve) => {
-
+		console.debug("通过fid找版块名中");
 		chrome.storage.local.get("fid", (data) => {
 			if (!data.length) GetForumIndex();
 
@@ -229,7 +256,7 @@ function GetForumIndex() {
 }
 
 var myHotThreadID = null;
-var ThreadURL = null;
+var ThreadURL = [];
 
 async function GetHotThread() {
 	console.log("开始获取热门贴");
@@ -238,7 +265,6 @@ async function GetHotThread() {
 	})
 	//console.log(data.json());
 	var data = await hotThread.json();
-	console.log(data)
 	/*
 	$.ajax({
 		url: bbsurl + "/api/mobile/index.php?module=hotthread",
@@ -248,14 +274,16 @@ async function GetHotThread() {
 	var json = data['Variables']["data"];
 	var randomThread = json[randomFrom(0, json.length)];
 	var forumname = await FidToName(randomThread["fid"]);
-	console.log("应该接收"+forumname);
+	console.debug("应该接收"+forumname);
 	//FidToName(randomThread["fid"]).then(forumname => {
 
+	/*
 	if(myHotThreadID!=null){
 		console.log("手动清理通知");
-		chrome.notifications.clear(id);
+		chrome.notifications.clear(myHotThreadID);
 		myHotThreadID = null;
 	}
+	*/
 
 	chrome.notifications.create({
 		type: "basic",
@@ -265,12 +293,14 @@ async function GetHotThread() {
 		message: "【" + forumname + "】 " + randomThread["subject"],
 		contextMessage:"最后回复时间："+randomThread["lastpost"].replace("&nbsp;"," "),
 	}, function (id) {
-		myHotThreadID = id;
-		ThreadURL = bbsurl+"/thread-"+randomThread["tid"]+"-1-1.html";
+		console.debug("该通知的id为"+id);
+		ThreadURL[id] = bbsurl+"/thread-"+randomThread["tid"]+"-1-1.html";
+		console.debug(ThreadURL);
 		setTimeout(function () {
 			console.log("自动清理通知");
 			chrome.notifications.clear(id);
-			myHotThreadID = null;
+			//myHotThreadID = null;
+			delete ThreadURL[id];
 		}, 9000);
 	});
 	//});

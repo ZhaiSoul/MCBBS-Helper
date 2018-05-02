@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "MCBBS扩展插件",
     "description": "能够实现MCBBS消息提醒与热门贴推送等功能，让你使用MCBBS更加轻松容易。",
-    "version": "0.7",
+    "version": "0.7.5",
     "update_url": "http://clients2.google.com/service/update2/crx",
     "background": {
         "scripts": [
@@ -31,6 +31,7 @@
     "icons": {
         "128": "icon.png"
     },
+    "options_page": "settings.html",
     "permissions": [
         "alarms",
         "tabs",
@@ -39,6 +40,7 @@
         "notifications",
         "cookies",
         "*://*.mcbbs.net/*",
+        "*://api.zhaisoul.com/*",
         "webRequestBlocking"
     ]
 }

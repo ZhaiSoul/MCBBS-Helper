@@ -24,6 +24,8 @@
 
 			$window.on('load', function() {
 				window.setTimeout(function() {
+					var key = getParamString("mod")
+					if(key=="new") $("#welcome").html("更新已完成！");
 					$body.removeClass('is-loading');
 				}, 0);
 			});
@@ -304,3 +306,13 @@
 	});
 
 })(jQuery);
+
+function getParamString(name) {  
+	var paramUrl = window.location.search.substr(1);  
+	var paramStrs = paramUrl.split('&');  
+	var params = {};  
+	for(var index = 0; index < paramStrs.length; index++) {  
+		params[paramStrs[index].split('=')[0]] = decodeURI(paramStrs[index].split('=')[1]);  
+	}  
+	return params[name];  
+}  
