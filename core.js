@@ -5,6 +5,7 @@ var updateserver = 'https://api.zhaisoul.com/MCBBS-Helper/v1/update.json';
 //API地址
 var headurl = bbsurl + "/uc_server/avatar.php?uid=";//头像API
 var userprofile = bbsurl + "/api/mobile/index.php?module=profile";//用户信息API
+var forumindex = bbsurl + "/api/mobile/index.php?module=forumindex";
 //每次调用API都将缓存消息、提醒、用户名等信息（反正有啥用得到的信息就缓存）
 
 var mcbbs = new UserBBS(bbsurl, function () {
@@ -241,7 +242,7 @@ function FidToName(fid) {
 
 function GetForumIndex() {
 	$.ajax({
-		url: bbsurl + "/api/mobile/index.php?module=forumindex",
+		url: forumindex,
 		contentType: 'MCBBSHelper Plugin/1.0(zhaisoul.650@gmail.com)'
 	}).done(function (data) {
 		var json = data["Variables"]["forumlist"];
